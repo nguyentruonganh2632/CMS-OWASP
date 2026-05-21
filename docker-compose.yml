@@ -1,0 +1,57 @@
+services:
+  # ─── MySQL Database ───────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: cms_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-2632002}
+      MYSQL_DATABASE: ${MYSQL_DB:-cat_food_shop}
+    ports:
+      - "3307:3306"           # Map ra 3307 để tránh xung đột với MySQL local
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./backend/database/init_db.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./backend/database/seed_data.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_PASSWORD:-2632002}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Flask Backend ────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cms_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_USER: ${MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-2632002}
+      MYSQL_DB: ${MYSQL_DB:-cat_food_shop}
+      SECRET_KEY: ${SECRET_KEY:-super-secret-key-change-it-in-production}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app    # Hot reload trong development
+
+  # ─── React Frontend (Nginx) ───────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cms_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  db_data:
