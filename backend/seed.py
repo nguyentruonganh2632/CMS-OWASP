@@ -4,9 +4,9 @@ import os, pymysql
 load_dotenv()
 
 conn = pymysql.connect(
-    host='localhost', user='root',
+    host=os.getenv('MYSQL_HOST', 'localhost'), user='root',
     password=os.getenv('MYSQL_PASSWORD', ''),
-    port=3306, db='cat_food_shop',
+    port=int(os.getenv('MYSQL_PORT', 3306)), db='cat_food_shop',
     charset='utf8mb4', autocommit=True
 )
 cursor = conn.cursor()
@@ -50,7 +50,7 @@ print("  Products: OK")
 
 cursor.execute("""
 INSERT IGNORE INTO users (id, full_name, email, phone, password_hash, role_id, balance, status) VALUES
-(1, 'Super Admin', 'admin@catfood.com', '0900000000', 'scrypt:admin', 1, 999999.00, 1),
+(1, 'Super Admin', 'admin@catfood.com', '0900000000', 'plain:Admin@123', 1, 999999.00, 1),
 (2, 'Admin Nguyen', 'admin2@catfood.com', '0901234567', 'plain:123456', 1, 100000.00, 1),
 (3, 'Staff Tran', 'staff@catfood.com', '0912345678', 'plain:password', 1, 100000.00, 1),
 (4, 'Nguyen Van An', 'customer1@catfood.com', '0923456789', 'plain:abc123', 2, 100000.00, 1),

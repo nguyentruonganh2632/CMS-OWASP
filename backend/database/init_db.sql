@@ -131,4 +131,4 @@ INSERT IGNORE INTO roles (id, name, description) VALUES
 
 -- Default admin (password: Admin@123)
 INSERT IGNORE INTO users (id, full_name, email, password_hash, role_id, balance) VALUES
-(1, 'Super Admin', 'admin@catfood.com', 'scrypt:32768:8:1$K5jY8Zt9H8jY8Zt9$e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 1, 999999.00);
+(1, 'Super Admin', 'admin@catfood.com', 'plain:Admin@123', 1, 999999.00);
