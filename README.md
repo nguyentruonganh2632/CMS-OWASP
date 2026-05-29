@@ -40,7 +40,7 @@ Khi hệ thống khởi chạy lần đầu, tệp `seed.py` sẽ tự động t
 
 | Vai trò | Email | Mật khẩu (Plain text) |
 | :--- | :--- | :--- |
-| **Super Admin** | `admin@catfood.com` | *Lỗ hổng (Trống/Bypass SQLi)* |
+| **Super Admin** | `admin@catfood.com` | `Admin@123` |
 | **Admin** | `admin2@catfood.com` | `123456` |
 | **Staff** | `staff@catfood.com` | `password` |
 | **Khách hàng 1** | `customer1@catfood.com`| `abc123` |
